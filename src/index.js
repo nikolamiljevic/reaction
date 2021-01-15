@@ -1,14 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import PubSub from './pubsub'
+import PubSub,{ PubSubContext } from './pubsub'
 
 import {createStore} from 'redux'
 import {Provider} from 'react-redux'
 import rootReducer from './reducers/index'
 import './index.css';
 
-const store = createStore(rootReducer)
+import { newMessage } from './actions/messages'
+
+const store = createStore(
+  rootReducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 console.log('store.getState()',store.getState());
 store.subscribe(() => console.log('store.getState()',store.getState()));
@@ -25,12 +30,15 @@ pubsub.addListener({
 });
 
 setTimeout(() => {
-  pubsub.publish({type:'foo',value:'bar'})
+  pubsub.publish(newMessage('Hello world'));
+
 }, 1000);
 
 ReactDOM.render(
     <Provider store={store}>
+      <PubSubContext.Provider value={{pubsub}}>
         <App />
+      </PubSubContext.Provider>
     </Provider>
 ,
  document.getElementById('root'));
