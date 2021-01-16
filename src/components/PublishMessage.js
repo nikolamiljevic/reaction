@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 import {PubSubContext} from '../pubsub'
 import { newMessage } from '../actions/messages'
 
@@ -16,7 +17,9 @@ class  PublishMessage extends React.Component {
 
     publishMessage = (e) => {
         e.preventDefault();
-        this.context.pubsub.publish(newMessage(this.state.text))
+        const { text } = this.state;
+        const { username } = this.props;
+        this.context.pubsub.publish(newMessage( {text, username} ))
     }
 
     render (){
@@ -33,4 +36,8 @@ class  PublishMessage extends React.Component {
     static contextType = PubSubContext;
 }
 
-export default PublishMessage
+const mapStateToProps = state => ({
+    username: state.username
+})
+
+export default connect(mapStateToProps)(PublishMessage)

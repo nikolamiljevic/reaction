@@ -30,8 +30,7 @@ pubsub.addListener({
 });
 
 setTimeout(() => {
-  pubsub.publish(newMessage('Hello world'));
-
+  pubsub.publish(newMessage({text:'Hello world', username: 'John M.'}));
 }, 1000);
 
 ReactDOM.render(
